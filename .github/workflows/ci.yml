@@ -12,13 +12,13 @@ jobs:
   lint-and-test:
     runs-on: ubuntu-latest
 
-    services:
-      # Start a Selenium Grid container with Chrome (you can modify this depending on your browser requirements)
-      selenium:
-        image: selenium/standalone-chrome:latest
-        options: --shm-size=2g # Increase the size of /dev/shm for Chrome to avoid crashes
-        ports:
-          - 4444:4444 # Expose the default Selenium WebDriver port
+    # services:
+    #   # Start a Selenium Grid container with Firefox
+    #   selenium:
+    #     image: selenium/standalone-firefox:latest
+    #     options: --shm-size=2g # Increase the size of /dev/shm for Firefox to avoid crashes
+    #     ports:
+    #       - 4444:4444 # Expose the default Selenium WebDriver port
 
     steps:
       # Step 1: Checkout Code
@@ -66,6 +66,11 @@ jobs:
           cd TodoList 
           coverage run --source='App' --omit='App/tests/unit/*' manage.py test App/tests/integration -v 2
           coverage report
+
+      - name: Install GeckoDriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y firefox-geckodriver
 
       # Step 8: Run E2E Tests
       - name: Run E2E Tests

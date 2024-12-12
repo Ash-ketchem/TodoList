@@ -10,8 +10,10 @@ from selenium.webdriver.support import expected_conditions as EC
 class UserLoginTest(LiveServerTestCase):
 
     def setUp(self):
-        """Set up the test environment"""
-        self.browser = webdriver.Chrome()
+        """Set up the test environment with Firefox WebDriver"""
+        options = webdriver.FirefoxOptions()
+        options.add_argument("--headless")  # Run tests in headless mode (no UI)
+        self.browser = webdriver.Firefox(options=options)
         self.url = "http://127.0.0.1:8000/"  # URL to the app
 
     def tearDown(self):
