@@ -29,8 +29,8 @@ class TaskViewSetTest(APITestCase):
 
     def test_task_destroy_deletes_task_and_tags(self):
         """
-            Test that deleting a task also deletes associated tags
-            when they are no longer used
+        Test that deleting a task also deletes associated tags
+        when they are no longer used
         """
 
         self.client.credentials(HTTP_AUTHORIZATION=self.basic_auth)
