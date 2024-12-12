@@ -6,5 +6,4 @@ class AppConfig(AppConfig):
     name = "App"
 
     def ready(self):
-        import App.signals
         return super().ready()

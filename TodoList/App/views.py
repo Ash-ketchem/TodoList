@@ -10,15 +10,18 @@ from rest_framework.pagination import PageNumberPagination
 
 # Create your views here.
 
+
 class TaskListPagination(PageNumberPagination):
-    page_size = 10 # Tasks per page
+    page_size = 10  # Tasks per page
+
 
 class TaskViewSet(viewsets.ModelViewSet):
     """Handle all CRUD operations for tasks."""
+
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     filter_backends = [SearchFilter]
-    search_fields = ['title', 'tags__name']
+    search_fields = ["title", "tags__name"]
     pagination_class = TaskListPagination
 
     def destroy(self, request, *args, **kwargs):
