@@ -12,6 +12,14 @@ jobs:
   lint-and-test:
     runs-on: ubuntu-latest
 
+    services:
+      # Start a Selenium Grid container with Chrome (you can modify this depending on your browser requirements)
+      selenium:
+        image: selenium/standalone-chrome:latest
+        options: --shm-size=2g # Increase the size of /dev/shm for Chrome to avoid crashes
+        ports:
+          - 4444:4444 # Expose the default Selenium WebDriver port
+
     steps:
       # Step 1: Checkout Code
       - name: Checkout code
@@ -59,8 +67,10 @@ jobs:
           coverage run --source='App' --omit='App/tests/unit/*' manage.py test App/tests/integration -v 2
           coverage report
 
-    #   # Step 8: Run E2E Tests
-    #   - name: Run E2E Tests
-    #     run: |
-    #       source venv/bin/activate
-    #       pytest App/tests/e2e
+      # Step 8: Run E2E Tests
+      - name: Run E2E Tests
+        run: |
+          source venv/bin/activate
+          cd TodoList
+          export SELENIUM_URL="http://localhost:4444/wd/hub"  # Selenium URL for the browser session
+          python3 manage.py test App/tests/E2E
