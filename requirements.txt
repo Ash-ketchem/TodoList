@@ -10,3 +10,4 @@ pluggy==1.5.0
 pycodestyle==2.12.1
 pyflakes==3.2.0
 sqlparse==0.5.2
+black
