@@ -1,11 +1,8 @@
-from django.urls import reverse
 from django.contrib.auth import get_user_model
 from rest_framework.test import APITestCase
 from django.test import Client
 from App.models import Task, Tag
-from App.serializers import TaskSerializer, TagSerializer
 import base64
-from django.utils.timezone import now, timedelta
 
 
 class AdminIntegrationTest(APITestCase):

@@ -28,7 +28,10 @@ class TaskViewSetTest(APITestCase):
         self.basic_auth = "Basic " + base64.b64encode(b"test:test").decode("utf-8")
 
     def test_task_destroy_deletes_task_and_tags(self):
-        """Test that deleting a task also deletes associated tags when they are no longer used"""
+        """
+            Test that deleting a task also deletes associated tags
+            when they are no longer used
+        """
 
         self.client.credentials(HTTP_AUTHORIZATION=self.basic_auth)
 
@@ -46,7 +49,7 @@ class TaskViewSetTest(APITestCase):
         # Ensure task is deleted
         self.assertEqual(Task.objects.count(), 0)
 
-        # Ensure tags used by task1 are deleted (since they are no longer associated with any task)
+        # Ensure tags used by task1 are deleted
         self.assertEqual(Tag.objects.count(), 1)
 
         self.assertEqual(Tag.objects.first().name, self.tag2.name)

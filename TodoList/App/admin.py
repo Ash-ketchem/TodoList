@@ -52,7 +52,7 @@ class TaskAdmin(admin.ModelAdmin):
         if change:
             validated_data = form.cleaned_data
 
-            # Custom update logic: use your existing update method to handle the task update
+            # use your existing update method to handle the task update
             try:
                 serializer = TaskSerializer()
                 obj = serializer.update(obj, validated_data)

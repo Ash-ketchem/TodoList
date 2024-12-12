@@ -1,7 +1,7 @@
 import base64
 from django.urls import reverse
 from App.models import Task, Tag
-from App.serializers import TaskSerializer, TagSerializer
+from App.serializers import TaskSerializer
 from django.contrib.auth.models import User
 from django.utils.timezone import now, timedelta
 from rest_framework.test import APITestCase

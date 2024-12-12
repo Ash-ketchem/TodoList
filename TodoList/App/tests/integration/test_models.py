@@ -1,11 +1,8 @@
 from django.test import TestCase
-from App.serializers import TaskSerializer, TagSerializer
+from App.serializers import TaskSerializer
 from App.models import Task, Tag
-
-from django.test import TestCase
 from datetime import timedelta
 from django.utils.timezone import now
-from App.models import Task
 from django.core.exceptions import ValidationError
 from rest_framework.exceptions import ValidationError as VE
 
@@ -31,7 +28,7 @@ class TaskModelTestCase(TestCase):
         self.assertEqual(str(self.tag1), f"{self.tag1.name}")
 
     def test_task_create_due_date(self):
-        with self.assertRaises(ValidationError) as context:
+        with self.assertRaises(ValidationError):
             Task.objects.create(
                 title="Sample Task",
                 description="Sample Description",

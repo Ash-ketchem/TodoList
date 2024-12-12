@@ -1,9 +1,6 @@
-from rest_framework import status
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from .models import Task, Tag
-from .serializers import TagSerializer, TaskSerializer
-from rest_framework import routers, serializers, viewsets
+from .models import Task
+from .serializers import TaskSerializer
+from rest_framework import viewsets
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
 

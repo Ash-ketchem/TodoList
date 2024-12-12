@@ -2,12 +2,10 @@
 from unittest.mock import MagicMock
 from django.test import TestCase
 from django.contrib.admin.sites import site
-from django.contrib.auth.models import User
 from django.urls import reverse
 from App.models import Tag, Task
 from rest_framework.request import HttpRequest
 from django.contrib.auth.models import User, Permission
-from django.contrib.messages import get_messages
 
 
 class TaskAdminTests(TestCase):
