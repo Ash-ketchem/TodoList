@@ -72,5 +72,6 @@ jobs:
         run: |
           source venv/bin/activate
           cd TodoList
+          python3 manage.py runserver&
           export SELENIUM_URL="http://localhost:4444/wd/hub"  # Selenium URL for the browser session
           python3 manage.py test App/tests/E2E
