@@ -90,4 +90,8 @@ Navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000) to access the applica
 
 Interactive API documentation is available using Swagger UI.
 
-- [http://127.0.0.1:8000/api/schema/docs
+- http://127.0.0.1:8000/api/schema/docs
+
+# Coverage Summary
+
+![coverage summary](https://github.com/user-attachments/assets/ef21016d-c5ba-42ea-a810-ce2aa26143d7)
