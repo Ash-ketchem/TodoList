@@ -11,7 +11,7 @@ class UserLoginTest(LiveServerTestCase):
 
     def setUp(self):
         """Set up the test environment"""
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.Chrome()
         self.url = "http://127.0.0.1:8000/"  # URL to the app
 
     def tearDown(self):
