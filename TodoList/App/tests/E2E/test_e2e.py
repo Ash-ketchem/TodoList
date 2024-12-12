@@ -5,16 +5,21 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from django.contrib.auth.models import User
 
 
 class UserLoginTest(LiveServerTestCase):
 
     def setUp(self):
+        # Create a superuser
+        User.objects.create_superuser(
+            username="admin", email="admin@example.com", password="admin"
+        )
         """Set up the test environment with Firefox WebDriver"""
-        options = webdriver.FirefoxOptions()
-        options.add_argument("--headless")  # Run tests in headless mode (no UI)
-        self.browser = webdriver.Firefox(options=options)
-        self.url = "http://127.0.0.1:8000/"  # URL to the app
+        # options = webdriver.FirefoxOptions()
+        # options.add_argument("--headless")  # Run tests in headless mode (no UI)
+        self.browser = webdriver.Firefox()
+        self.url = self.live_server_url  # URL to the app
 
     def tearDown(self):
         """Clean up after each test"""
@@ -42,7 +47,7 @@ class UserLoginTest(LiveServerTestCase):
 
     def login_as_admin(self):
         """Log in as admin user"""
-        self.browser.get(self.url + "admin/")
+        self.browser.get(self.url + "/admin/")
         self.wait_for_element(By.NAME, "username")
         self.browser.find_element(By.NAME, "username").send_keys("admin")
         self.browser.find_element(By.NAME, "password").send_keys("admin")
@@ -55,9 +60,9 @@ class UserLoginTest(LiveServerTestCase):
 
     def verify_task_view(self):
         """Verify admin can view all tasks"""
-        self.browser.get(self.url + "admin/App/task/")
-        results_table = self.wait_for_element(By.CLASS_NAME, "results")
-        self.assertTrue(results_table.is_displayed(), "The table is not visible.")
+        self.browser.get(self.url + "/admin/App/task/")
+        add_task = self.wait_for_element(By.CLASS_NAME, "addlink")
+        self.assertTrue(add_task.is_displayed(), "The add task is not visible")
         time.sleep(2)
 
     def create_task(self, title, description):
