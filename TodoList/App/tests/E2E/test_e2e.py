@@ -6,6 +6,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from django.contrib.auth.models import User
+from selenium.webdriver.firefox.options import Options
+from App.models import Task
 
 
 class UserLoginTest(LiveServerTestCase):
@@ -15,10 +17,13 @@ class UserLoginTest(LiveServerTestCase):
         User.objects.create_superuser(
             username="admin", email="admin@example.com", password="admin"
         )
+        t1 = Task.objects.create(title="demo", description="demo")
+        t1.save()
+
         """Set up the test environment with Firefox WebDriver"""
-        # options = webdriver.FirefoxOptions()
-        # options.add_argument("--headless")  # Run tests in headless mode (no UI)
-        self.browser = webdriver.Firefox()
+        options = Options()
+        options.add_argument("--headless")  # Run tests in headless mode (no UI)
+        self.browser = webdriver.Firefox(options=options)
         self.url = self.live_server_url  # URL to the app
 
     def tearDown(self):
@@ -67,7 +72,7 @@ class UserLoginTest(LiveServerTestCase):
 
     def create_task(self, title, description):
         """Create a new task"""
-        self.browser.get(self.url + "admin/App/task/add/")
+        self.browser.get(self.url + "/admin/App/task/add/")
 
         title_input = self.wait_for_element(By.NAME, "title")
         description_input = self.browser.find_element(By.NAME, "description")
