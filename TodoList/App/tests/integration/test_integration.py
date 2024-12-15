@@ -1,4 +1,5 @@
 import base64
+from django.core.exceptions import ValidationError
 from django.urls import reverse
 from App.models import Task, Tag
 from App.serializers import TaskSerializer
@@ -93,6 +94,12 @@ class IntegrationTest(APITestCase):
         # Assertions
         self.assertEqual(response.status_code, 400)
 
+        # Manual validation to confirm
+        # the backend rejects saving a task with past due_date
+        with self.assertRaises(ValidationError):
+            self.task1.due_date = now().date() - timedelta(days=2)
+            self.task1.save()
+
     def test_update_task(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.basic_auth)
 
@@ -120,14 +127,10 @@ class IntegrationTest(APITestCase):
         # Data to update
         update_data = {"status": Task.StatusChoices.OVERDUE}
 
-        # Send PATCH request to update the task
-        url = reverse("task-detail", kwargs={"pk": self.task1.id})
-        response = self.client.patch(url, update_data)
-
-        self.assertIn("status", response.json())
-        self.assertEqual(
-            response.json()["status"], "Cannot update task to OVERDUE status."
-        )
+        with self.assertRaises(ValidationError):
+            # Send PATCH request to update the task
+            url = reverse("task-detail", kwargs={"pk": self.task1.id})
+            self.client.patch(url, update_data)
 
     def test_delete_task(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.basic_auth)

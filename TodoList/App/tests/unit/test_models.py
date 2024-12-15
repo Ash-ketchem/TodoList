@@ -4,7 +4,6 @@ from App.models import Task, Tag
 from datetime import timedelta
 from django.utils.timezone import now
 from django.core.exceptions import ValidationError
-from rest_framework.exceptions import ValidationError as VE
 
 
 class TaskModelTestCase(TestCase):
@@ -40,6 +39,6 @@ class TaskModelTestCase(TestCase):
         data = {"status": Task.StatusChoices.OVERDUE}
         serializer = TaskSerializer(instance=self.task, data=data, partial=True)
 
-        with self.assertRaises(VE):
+        with self.assertRaises(ValidationError):
             serializer.is_valid(raise_exception=True)
             serializer.save()

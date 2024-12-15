@@ -41,6 +41,10 @@ class Task(models.Model):
                 "The due date must be greater than or equal to the current date."
             )
 
+        if self.status == Task.StatusChoices.OVERDUE:
+            if not self.due_date or now().date() <= self.due_date:
+                raise ValidationError("The Task cannot be marked overdue")
+
     def save(self, *args, **kwargs):
         self.full_clean()  # Validate the model instance
         super().save(*args, **kwargs)

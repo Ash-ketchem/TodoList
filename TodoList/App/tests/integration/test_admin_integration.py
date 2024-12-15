@@ -43,21 +43,68 @@ class AdminIntegrationTest(APITestCase):
         response = self.admin_client.get("/admin/")
         self.assertEqual(response.status_code, 200)
 
-    def test_delete_task_via_admin(self):
-        task_to_delete = Task.objects.create(
-            title="Task 4",
-            description="To be deleted",
-        )
+    def test_add_task_via_admin(self):
+        data = {
+            "title": "task 1",
+            "description": "task",
+            "due_date": "",
+            "status": Task.StatusChoices.OPEN,
+            "_save": "Save",
+        }
 
-        response = self.admin_client.get(f"/admin/App/task/{task_to_delete.id}/change/")
+        response = self.admin_client.get("/admin/App/task/add/")
+        self.assertEqual(response.status_code, 200)
+
+        response = self.admin_client.post("/admin/App/task/add/", data=data)
+        self.assertEqual(response.status_code, 302)
+
+        self.assertEqual(Task.objects.count(), 3)
+
+    def test_add_invalid_task_via_admin(self):
+        data = {
+            "title": "task 1",
+            "description": "task",
+            "due_date": "",
+            "status": Task.StatusChoices.OVERDUE,
+            "_save": "Save",
+        }
+
+        response = self.admin_client.get("/admin/App/task/add/")
+        self.assertEqual(response.status_code, 200)
+
+        response = self.admin_client.post("/admin/App/task/add/", data=data)
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(Task.objects.count(), 2)
+
+    def test_delete_task_via_admin(self):
+        response = self.admin_client.get(f"/admin/App/task/{self.task1.id}/change/")
         self.assertEqual(response.status_code, 200)
 
         response = self.admin_client.post(
-            f"/admin/App/task/{task_to_delete.id}/delete/", {"post": "yes"}
+            f"/admin/App/task/{self.task1.id}/delete/", {"post": "yes"}
         )
 
         self.assertEqual(response.status_code, 302)
-        self.assertFalse(Task.objects.filter(id=task_to_delete.id).exists())
+        self.assertFalse(Task.objects.filter(id=self.task1.id).exists())
+
+    def test_delete_all_tasks_via_admin(self):
+        # testing delete_queryset
+        data = {
+            "action": "delete_selected",
+            "select_across": "0",
+            "index": "0",
+            "_selected_action": [task.id for task in Task.objects.all()],
+        }
+
+        response = self.admin_client.post("/admin/App/task/?o=2", data=data)
+        self.assertEqual(response.status_code, 200)
+
+        data.update({"action": "delete_selected", "post": "yes"})
+        # deleting all tasks
+        response = self.admin_client.post("/admin/App/task/?o=2", data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(Task.objects.count(), 0)
 
     def test_admin_permissions_for_non_admin_user(self):
         # A non-admin user should not be able to access the admin site

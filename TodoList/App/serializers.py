@@ -52,8 +52,8 @@ class TaskSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
 
-        if validated_data.get("status", "") == Task.StatusChoices.OVERDUE:
-            raise ValidationError({"status": "Cannot update task to OVERDUE status."})
+        # if validated_data.get("status", "") == Task.StatusChoices.OVERDUE:
+        #     raise ValidationError({"status": "Cannot update task to OVERDUE status."})
 
         tags_data = validated_data.pop("tags", None)
 

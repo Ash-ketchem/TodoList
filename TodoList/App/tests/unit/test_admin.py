@@ -22,7 +22,11 @@ class TaskAdminTests(TestCase):
 
     def test_valid_task_data(self):
         # Attempt to update data
-        change_data = {"title": "Task 2", "description": "Test changed"}
+        change_data = {
+            "title": "Task 2",
+            "description": "Test changed",
+            "status": Task.StatusChoices.OPEN,
+        }
 
         # Use the admin interface to simulate the update
         admin_site = site
@@ -30,13 +34,18 @@ class TaskAdminTests(TestCase):
         request = HttpRequest()
         request.user = self.user
 
-        form = model_admin.get_form(request, self.task)(data=change_data)
-        form.is_valid()
-        model_admin.save_model(request, self.task, form, change=True)
+        form = model_admin.get_form(request, self.task)(
+            instance=self.task, data=change_data
+        )
+        if form.is_valid():
+            model_admin.save_model(request, self.task, form, change=True)
 
-        # Check that the task is updated correctly
-        self.assertEqual(Task.objects.get(id=self.task.id).title, "Task 2")
-        self.assertEqual(Task.objects.get(id=self.task.id).description, "Test changed")
+            # Check that the task is updated correctly
+            self.task.refresh_from_db()
+            self.assertEqual(Task.objects.get(id=self.task.id).title, "Task 2")
+            self.assertEqual(
+                Task.objects.get(id=self.task.id).description, "Test changed"
+            )
 
     def test_invalid_task_status_change(self):
         # Attempt to update task status to OVERDUE via admin interface

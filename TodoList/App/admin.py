@@ -3,8 +3,6 @@ from django.contrib import admin
 from django.db.models.query import QuerySet
 from django.http import HttpRequest
 from .models import Task, Tag
-from .serializers import TaskSerializer
-from rest_framework.exceptions import ValidationError
 
 # Register your models here.
 
@@ -47,21 +45,6 @@ class TaskAdmin(admin.ModelAdmin):
             if tag.task_set.count() == 1:
                 tag.delete()
         return super().delete_view(request, object_id, *args, **kwargs)
-
-    def save_model(self, request: Any, obj: Any, form: Any, change: Any):
-        if change:
-            validated_data = form.cleaned_data
-
-            # use your existing update method to handle the task update
-            try:
-                serializer = TaskSerializer()
-                obj = serializer.update(obj, validated_data)
-            except ValidationError as e:
-                # If validation error occurs, show it in the admin panel
-                self.message_user(request, (f"Error updating task: {e}"), level="error")
-                return None
-
-        return super().save_model(request, obj, form, change)
 
 
 @admin.register(Tag)
