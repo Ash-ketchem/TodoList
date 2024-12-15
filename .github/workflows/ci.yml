@@ -55,16 +55,15 @@ jobs:
         run: |
           source venv/bin/activate
           cd TodoList
-          coverage run --source='App' --omit='App/tests/integration/*' manage.py test App/tests/unit -v 2
+          coverage run --source='App' --omit='App/tests/*'  manage.py test App/tests/unit -v 2
           coverage report
-          coverage html -d htmlcov/unit
 
       # Step 7: Run Integration Tests
       - name: Run Integration Tests
         run: |
           source venv/bin/activate
           cd TodoList 
-          coverage run --source='App' --omit='App/tests/unit/*' manage.py test App/tests/integration -v 2
+          coverage run --source='App' --omit='App/tests/*'  manage.py test App/tests/integration -v 2
           coverage report
 
       # Step 8: Run E2E Tests
